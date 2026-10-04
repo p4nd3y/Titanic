@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RMS Titanic — AI Survival & Mortality Prediction Engine</title>
+  <meta name="description" content="State-of-the-art machine learning predictor for Titanic passenger survival and voyage death count simulation using Support Vector Machines and ensemble algorithms.">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="dark-theme">
+  <!-- Dynamic Background with Titanic Image -->
+  <div class="bg-container" id="bgContainer">
+    <div class="bg-image" style="background-image: url('/static/titanic.jpg');"></div>
+    <div class="bg-overlay"></div>
+    <div class="bg-ambient-glow"></div>
+  </div>
+
+  <div class="app-layout">
+    <!-- Top Navigation Header -->
+    <header class="app-header">
+      <div class="header-brand">
+        <div class="brand-crest">
+          <i class="fa-solid fa-anchor"></i>
+        </div>
+        <div class="brand-text">
+          <span class="brand-sub">WHITE STAR LINE • APRIL 1912</span>
+          <h1 class="brand-title">RMS TITANIC</h1>
+        </div>
+      </div>
+
+      <nav class="nav-tabs" role="tablist">
+        <button class="nav-tab-btn active" id="tabBtnPredictor" data-target="tab-predictor" role="tab" aria-selected="true">
+          <i class="fa-solid fa-ticket"></i> <span>Passenger Predictor</span>
+        </button>
+        <button class="nav-tab-btn" id="tabBtnDeathCount" data-target="tab-deathcount" role="tab" aria-selected="false">
+          <i class="fa-solid fa-chart-pie"></i> <span>Death Count Simulator</span>
+        </button>
+        <button class="nav-tab-btn" id="tabBtnModels" data-target="tab-models" role="tab" aria-selected="false">
+          <i class="fa-solid fa-microchip"></i> <span>Model Benchmark Lab</span>
+        </button>
+        <button class="nav-tab-btn" id="tabBtnManifest" data-target="tab-manifest" role="tab" aria-selected="false">
+          <i class="fa-solid fa-book-bookmark"></i> <span>Historical Manifest</span>
+        </button>
+      </nav>
+
+      <div class="header-actions">
+        <div class="model-badge-top" id="topModelBadge" title="Current Active ML Model">
+          <span class="pulse-dot"></span>
+          <span id="activeModelNameHeader">SVC (RBF) ~81.5%</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Marconi Wireless Telegraph Ticker -->
+    <div class="marconi-ticker-bar">
+      <div class="ticker-label"><i class="fa-solid fa-tower-broadcast"></i> MARCONI WIRELESS • MGY</div>
+      <div class="ticker-content-track">
+        <span class="ticker-text">"CQD CQD SOS DE MGY — HAVE STRUCK AN ICEBERG • SINKING FAST • LAT 41°46'N, LON 50°14'W — ENGINE ROOM FILLING" • R.M.S. TITANIC • 15 APRIL 1912</span>
+      </div>
+    </div>
+
+    <!-- Main Content Container -->
+    <main class="main-content">
+      
+      <!-- ================= TAB 1: PASSENGER PREDICTOR ================= -->
+      <section class="tab-pane active" id="tab-predictor" role="tabpanel">
+        <div class="predictor-grid">
+          
+          <!-- Left Column: Input Controls -->
+          <div class="glass-card config-card">
+            <div class="card-header">
+              <div class="card-title-group">
+                <i class="fa-solid fa-sliders header-icon"></i>
+                <div>
+                  <h2 class="card-title">Passenger Parameters</h2>
+                  <p class="card-subtitle">Configure ticket class, demographics, and voyage details</p>
+                </div>
+              </div>
+            </div>
+
+            <form id="predictionForm" class="prediction-form" onsubmit="return false;">
+              
+              <!-- Quick Archetype Preset Selection -->
+              <div class="form-group preset-group">
+                <label for="archetypeSelect"><i class="fa-solid fa-user-clock"></i> Historical Passenger Preset (Auto-Fill)</label>
+                <select id="archetypeSelect" class="glass-select preset-select" aria-label="Select historical passenger archetype">
+                  <option value="custom">Custom Passenger Configuration</option>
+                  <option value="jack">Jack Dawson (3rd Class Steerage, 20 yrs, £7.25, Southampton)</option>
+                  <option value="rose">Rose DeWitt Bukater (1st Class Luxury, 17 yrs, £150.00, Cherbourg)</option>
+                  <option value="captain">Capt. Edward J. Smith (1st Class Officer, 62 yrs, £50.00, Southampton)</option>
+                  <option value="family_child">Steerage Mother & Child (3rd Class, 8 yrs, £15.50, Queenstown)</option>
+                  <option value="second_class">Edwina Troutt (2nd Class Tourist, 28 yrs, £26.00, Southampton)</option>
+                  <option value="millionaire">Col. John Jacob Astor IV (1st Class Elite, 47 yrs, £247.50, Cherbourg)</option>
+                </select>
+              </div>
+
+              <!-- Model Selection -->
+              <div class="form-group model-selector-group">
+                <label for="modelSelect"><i class="fa-solid fa-microchip"></i> Machine Learning Algorithm</label>
+                <select id="modelSelect" class="glass-select highlight-select">
+                  <option value="svc" selected>Support Vector Machine (SVC RBF) — 81.46% (Top Accuracy in Notebook)</option>
+                  <option value="gradient_boosting">Gradient Boosting Classifier — 82.02% (Ensemble Model)</option>
+                  <option value="random_forest">Random Forest Ensemble — 80.34% (100 Trees)</option>
+                  <option value="logistic_regression">Logistic Regression — 80.34% (Linear Baseline)</option>
+                  <option value="decision_tree">Decision Tree — 79.21% (Rule-based Partitioner)</option>
+                  <option value="knn">K-Nearest Neighbors (k=5) — 79.21% (Distance Metric)</option>
+                  <option value="naive_bayes">Gaussian Naive Bayes — 77.53% (Probabilistic Model)</option>
+                </select>
+              </div>
+
+              <!-- Passenger Class Buttons -->
+              <div class="form-group">
+                <label><i class="fa-solid fa-crown"></i> Passenger Ticket Class</label>
+                <div class="class-selector-group" id="pclassSelector">
+                  <button type="button" class="class-btn" data-class="1">
+                    <span class="class-tier">1st Class</span>
+                    <span class="class-desc">Upper Promenade • Luxury</span>
+                  </button>
+                  <button type="button" class="class-btn" data-class="2">
+                    <span class="class-tier">2nd Class</span>
+                    <span class="class-desc">Middle Deck • Tourist</span>
+                  </button>
+                  <button type="button" class="class-btn active" data-class="3">
+                    <span class="class-tier">3rd Class</span>
+                    <span class="class-desc">Lower Hull • Steerage</span>
+                  </button>
+                </div>
+                <input type="hidden" id="pclassInput" value="3">
+              </div>
+
+              <!-- Gender Selection -->
+              <div class="form-group">
+                <label><i class="fa-solid fa-venus-mars"></i> Biological Sex</label>
+                <div class="gender-selector-group" id="genderSelector">
+                  <button type="button" class="gender-btn active" data-sex="male">
+                    <i class="fa-solid fa-mars"></i> Male
+                  </button>
+                  <button type="button" class="gender-btn" data-sex="female">
+                    <i class="fa-solid fa-venus"></i> Female
+                  </button>
+                </div>
+                <input type="hidden" id="sexInput" value="male">
+              </div>
+
+              <!-- Age Slider & Input -->
+              <div class="form-group">
+                <div class="label-with-value">
+                  <label for="ageSlider"><i class="fa-solid fa-cake-candles"></i> Age (Years)</label>
+                  <div class="val-badge"><span id="ageDisplay">25</span> yrs</div>
+                </div>
+                <div class="slider-row">
+                  <input type="range" id="ageSlider" min="1" max="80" value="25" class="glass-range">
+                  <input type="number" id="ageNumber" min="1" max="80" value="25" class="glass-num-input">
+                </div>
+              </div>
+
+              <!-- Family Traveling Companions (SibSp & Parch) -->
+              <div class="form-row two-col">
+                <div class="form-group">
+                  <label for="sibspInput"><i class="fa-solid fa-user-group"></i> Siblings / Spouses</label>
+                  <div class="stepper-group">
+                    <button type="button" class="step-btn" data-target="sibspInput" data-delta="-1"><i class="fa-solid fa-minus"></i></button>
+                    <input type="number" id="sibspInput" min="0" max="8" value="0" class="glass-input step-val" readonly>
+                    <button type="button" class="step-btn" data-target="sibspInput" data-delta="1"><i class="fa-solid fa-plus"></i></button>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="parchInput"><i class="fa-solid fa-person-breastfeeding"></i> Parents / Children</label>
+                  <div class="stepper-group">
+                    <button type="button" class="step-btn" data-target="parchInput" data-delta="-1"><i class="fa-solid fa-minus"></i></button>
+                    <input type="number" id="parchInput" min="0" max="6" value="0" class="glass-input step-val" readonly>
+                    <button type="button" class="step-btn" data-target="parchInput" data-delta="1"><i class="fa-solid fa-plus"></i></button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Fare (£) and Port of Embarkation -->
+              <div class="form-row two-col">
+                <div class="form-group">
+                  <div class="label-with-value">
+                    <label for="fareSlider"><i class="fa-solid fa-sterling-sign"></i> Ticket Fare (£)</label>
+                    <span class="val-badge">£<span id="fareDisplay">8.05</span></span>
+                  </div>
+                  <input type="range" id="fareSlider" min="0" max="300" step="1" value="8" class="glass-range">
+                  <input type="hidden" id="fareInput" value="8.05">
+                </div>
+
+                <div class="form-group">
+                  <label for="embarkedSelect"><i class="fa-solid fa-compass"></i> Port of Embarkation</label>
+                  <select id="embarkedSelect" class="glass-select">
+                    <option value="S" selected>Southampton (England)</option>
+                    <option value="C">Cherbourg (France)</option>
+                    <option value="Q">Queenstown (Ireland)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-actions">
+                <button type="button" id="predictBtn" class="btn-primary glow-btn">
+                  <i class="fa-solid fa-bolt"></i> Compute Survival Prediction
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Right Column: Live Outcome & Boarding Pass -->
+          <div class="glass-card outcome-card" id="outcomeCard">
+            <div class="card-header">
+              <div class="card-title-group">
+                <i class="fa-solid fa-compass-drafting header-icon"></i>
+                <div>
+                  <h2 class="card-title">Prediction Intelligence</h2>
+                  <p class="card-subtitle">Algorithmic survival probability and mortality assessment</p>
+                </div>
+              </div>
+              <div id="statusPulse" class="status-indicator-badge perished">
+                <i class="fa-solid fa-circle-dot"></i> <span id="statusText">PROBABLE CASUALTY</span>
+              </div>
+            </div>
+
+            <!-- Fate Gauge Section -->
+            <div class="fate-showcase" id="fateShowcase">
+              <div class="gauge-container">
+                <svg class="radial-gauge-svg" viewBox="0 0 160 160">
+                  <circle class="gauge-track" cx="80" cy="80" r="68"></circle>
+                  <circle class="gauge-fill" id="gaugeProgress" cx="80" cy="80" r="68" stroke-dasharray="427" stroke-dashoffset="360"></circle>
+                </svg>
+                <div class="gauge-center-content">
+                  <span class="gauge-pct" id="survivalPctDisplay">14.9%</span>
+                  <span class="gauge-caption">SURVIVAL CHANCE</span>
+                </div>
+              </div>
+
+              <div class="fate-summary-box">
+                <div class="outcome-badge-large perished" id="mainOutcomeBadge">
+                  <i class="fa-solid fa-skull" id="outcomeIcon"></i>
+                  <span id="outcomeLabel">PERISHED</span>
+                </div>
+                <div class="death-prob-stat">
+                  <span>Death Probability:</span>
+                  <strong id="deathPctDisplay" class="death-highlight">85.1%</strong>
+                </div>
+                <div class="model-certainty">
+                  <span>Model Confidence:</span>
+                  <span id="confidenceDisplay">85.1%</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- ================= ULTRA-REALISTIC 1912 WHITE STAR LINE CONTRACT TICKET ================= -->
+            <div class="realistic-titanic-ticket" id="boardingTicket">
+              
+              <!-- Left Perforated Inspection Stub -->
+              <div class="ticket-stub-section">
+                <div class="stub-notch-top"></div>
+                <div class="stub-notch-bottom"></div>
+                <div class="stub-emblem">
+                  <div class="wsl-red-flag">
+                    <i class="fa-solid fa-star white-star-symbol"></i>
+                  </div>
+                  <span class="stub-wsl-title">WHITE STAR</span>
+                </div>
+                <div class="stub-serial" id="ticketStubSerial">№ 3101298</div>
+                <div class="stub-inspection-badge">
+                  <i class="fa-solid fa-stamp"></i>
+                  <span>PASSED HEALTH INSPECTION</span>
+                  <small>PORT MEDICAL OFFICER</small>
+                </div>
+                <div class="stub-barcode-lines">
+                  <span>||||| | |||| ||| |||| | |||||</span>
+                </div>
+                <div class="stub-perforated-edge"></div>
+              </div>
+
+              <!-- Main Contract Ticket Body -->
+              <div class="ticket-main-section">
+                
+                <!-- Ticket Top Header -->
+                <div class="t-main-header">
+                  <div class="t-company-line">
+                    <span class="t-company-sub">OCEANIC STEAM NAVIGATION COMPANY, LIMITED OF ENGLAND</span>
+                    <h3 class="t-company-brand">WHITE STAR LINE</h3>
+                    <span class="t-mail-sub">ROYAL & UNITED STATES MAIL STEAMERS</span>
+                  </div>
+                  <div class="t-contract-meta">
+                    <span class="t-contract-title">PASSENGER'S CONTRACT TICKET</span>
+                    <span class="t-contract-number" id="ticketNumberDisplay">CONTRACT № 347082</span>
+                  </div>
+                </div>
+
+                <!-- Ship & Sailing Info Banner -->
+                <div class="t-ship-sailing-banner">
+                  <div class="t-ship-name">
+                    <i class="fa-solid fa-anchor"></i> STEAMSHIP: <strong>R.M.S. "TITANIC"</strong> (46,328 TONS)
+                  </div>
+                  <div class="t-sailing-date">
+                    SAILING: <strong>APRIL 10, 1912</strong> • SOUTHAMPTON TO NEW YORK
+                  </div>
+                </div>
+
+                <!-- Detailed Passenger Matrix -->
+                <div class="t-passenger-matrix">
+                  <div class="t-matrix-cell col-wide">
+                    <span class="tm-label">PASSENGER NAME</span>
+                    <strong class="tm-val highlight-name" id="ticketPassengerName">Mr. Jack Dawson</strong>
+                  </div>
+                  <div class="t-matrix-cell">
+                    <span class="tm-label">CLASS OF PASSAGE</span>
+                    <strong class="tm-val highlight-class" id="tClassDisplay">3RD CLASS STEERAGE</strong>
+                  </div>
+                  <div class="t-matrix-cell">
+                    <span class="tm-label">ASSIGNED BERTH / CABIN</span>
+                    <strong class="tm-val" id="ticketBerthDisplay">Berth 118 (Lower Hull)</strong>
+                  </div>
+                  <div class="t-matrix-cell">
+                    <span class="tm-label">PORT OF EMBARKATION</span>
+                    <strong class="tm-val" id="tPortDisplay">Southampton (England)</strong>
+                  </div>
+                  <div class="t-matrix-cell">
+                    <span class="tm-label">AGE & DEMOGRAPHICS</span>
+                    <strong class="tm-val" id="tDemographicsDisplay">20 Yrs • Male (Solo)</strong>
+                  </div>
+                  <div class="t-matrix-cell">
+                    <span class="tm-label">CONTRACT FARE RECORDED</span>
+                    <strong class="tm-val" id="tFareDisplay">£7.25 (£7 5s 0d)</strong>
+                  </div>
+                </div>
+
+                <!-- Ticket Footer & Historical Seal -->
+                <div class="t-ticket-footer">
+                  <div class="t-fine-print">
+                    <span>Subject to conditions of carriage printed on counterpart. Baggage at passenger's risk unless covered under maritime policy.</span>
+                    <div class="t-signature-block">
+                      <span class="t-sig-line">J. Bruce Ismay</span>
+                      <small>FOR WHITE STAR LINE — MANAGING DIRECTOR</small>
+                    </div>
+                  </div>
+                  
+                  <div class="t-seal-emblem">
+                    <div class="seal-circle">
+                      <span>OFFICIAL SEAL</span>
+                      <small>1912</small>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Distressed Rubber Fate Stamp Overlay -->
+                <div class="ticket-distressed-stamp-container">
+                  <div class="distressed-rubber-stamp perished" id="ticketStamp">
+                    <div class="stamp-inner-border">
+                      <span class="stamp-main-text" id="ticketStampText">★ CASUALTY — PERISHED ★</span>
+                      <span class="stamp-sub-text" id="ticketStampSub">S.S. TITANIC FOUNDERED</span>
+                      <span class="stamp-date-text" id="ticketStampDate">15th APRIL 1912 • LAT 41°46'N, LON 50°14'W</span>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- Contributing Risk Factors -->
+            <div class="risk-factors-section">
+              <h3 class="section-heading"><i class="fa-solid fa-scale-balanced"></i> Key Determinant Factors</h3>
+              <div class="factors-list" id="factorsList">
+                <!-- Dynamically populated -->
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
+
+      <!-- ================= TAB 2: DEATH COUNT SIMULATOR ================= -->
+      <section class="tab-pane" id="tab-deathcount" role="tabpanel">
+        
+        <!-- Voyage Total Death Prediction Header Card -->
+        <div class="glass-card manifest-summary-banner">
+          <div class="manifest-banner-header">
+            <div>
+              <span class="banner-tag"><i class="fa-solid fa-ship"></i> HISTORICAL MANIFEST ANALYSIS</span>
+              <h2 class="banner-title">Voyage Death Count Prediction vs Actual Historical Record</h2>
+              <p class="banner-sub">Model evaluation on all 889 recorded passengers from Southampton, Cherbourg & Queenstown</p>
+            </div>
+            
+            <div class="manifest-controls">
+              <div class="filter-group">
+                <label for="manifestClassFilter">Class:</label>
+                <select id="manifestClassFilter" class="glass-select-sm">
+                  <option value="all">All Classes</option>
+                  <option value="1">1st Class Only</option>
+                  <option value="2">2nd Class Only</option>
+                  <option value="3">3rd Class Only</option>
+                </select>
+              </div>
+              <div class="filter-group">
+                <label for="manifestSexFilter">Gender:</label>
+                <select id="manifestSexFilter" class="glass-select-sm">
+                  <option value="all">All Genders</option>
+                  <option value="male">Men Only</option>
+                  <option value="female">Women Only</option>
+                </select>
+              </div>
+              <button id="refreshManifestStatsBtn" class="btn-glass-sm"><i class="fa-solid fa-arrows-rotate"></i> Recalculate</button>
+            </div>
+          </div>
+
+          <!-- Key Metrics Counter Cards -->
+          <div class="metric-counter-grid">
+            <div class="counter-card total">
+              <div class="counter-icon"><i class="fa-solid fa-users"></i></div>
+              <div class="counter-data">
+                <span class="counter-val" id="cntTotalPassengers">889</span>
+                <span class="counter-label">Total Manifest Passengers</span>
+              </div>
+            </div>
+
+            <div class="counter-card deaths">
+              <div class="counter-icon"><i class="fa-solid fa-skull"></i></div>
+              <div class="counter-data">
+                <span class="counter-val" id="cntPredictedDeaths">584</span>
+                <span class="counter-label">Predicted Deaths</span>
+                <span class="counter-sub" id="cntActualDeathsSub">Actual Historical: 549</span>
+              </div>
+            </div>
+
+            <div class="counter-card survivors">
+              <div class="counter-icon"><i class="fa-solid fa-life-ring"></i></div>
+              <div class="counter-data">
+                <span class="counter-val" id="cntPredictedSurvivors">305</span>
+                <span class="counter-label">Predicted Survivors</span>
+                <span class="counter-sub" id="cntActualSurvivorsSub">Actual Historical: 340</span>
+              </div>
+            </div>
+
+            <div class="counter-card accuracy">
+              <div class="counter-icon"><i class="fa-solid fa-bullseye"></i></div>
+              <div class="counter-data">
+                <span class="counter-val" id="cntModelAccuracy">81.5%</span>
+                <span class="counter-label">Prediction Accuracy</span>
+                <span class="counter-sub" id="cntDeathErrorSub">Death Toll Delta: ±35</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Breakdown Visual Bars -->
+          <div class="breakdown-columns-grid">
+            
+            <div class="breakdown-card">
+              <h3 class="breakdown-title"><i class="fa-solid fa-layer-group"></i> Casualties by Passenger Class</h3>
+              <div class="bar-breakdown-list" id="classBreakdownList">
+                <!-- Populated via JS -->
+              </div>
+            </div>
+
+            <div class="breakdown-card">
+              <h3 class="breakdown-title"><i class="fa-solid fa-venus-mars"></i> Casualties by Gender</h3>
+              <div class="bar-breakdown-list" id="genderBreakdownList">
+                <!-- Populated via JS -->
+              </div>
+            </div>
+
+            <div class="breakdown-card">
+              <h3 class="breakdown-title"><i class="fa-solid fa-children"></i> Casualties by Age Group</h3>
+              <div class="bar-breakdown-list" id="ageBreakdownList">
+                <!-- Populated via JS -->
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Historical Deck Anatomy & Lifeboat Deficit Breakdown -->
+          <div class="deck-anatomy-card">
+            <div class="deck-anatomy-header">
+              <div class="deck-header-info">
+                <span class="deck-tag"><i class="fa-solid fa-life-ring"></i> EVACUATION TELEMETRY</span>
+                <h3 class="deck-title">Vessel Compartment & Lifeboat Allocation Dynamics</h3>
+              </div>
+              <div class="lifeboat-stat-pill">
+                <span class="lb-label">Lifeboat Capacity:</span>
+                <strong class="lb-val">1,178 / 2,224 Souls (53.0% Max)</strong>
+              </div>
+            </div>
+
+            <div class="deck-tiers-grid">
+              <div class="deck-tier-item tier-1">
+                <div class="tier-badge">BOAT DECK & PROMENADE (1ST CLASS)</div>
+                <div class="tier-stat-row">
+                  <span class="tier-rate">62.5% Survived</span>
+                  <span class="tier-desc">Immediate access to port & starboard boat davits</span>
+                </div>
+                <div class="tier-progress-track"><div class="tier-fill tier-fill-1" style="width: 62.5%;"></div></div>
+              </div>
+
+              <div class="deck-tier-item tier-2">
+                <div class="tier-badge">SALOON & UPPER DECKS (2ND CLASS)</div>
+                <div class="tier-stat-row">
+                  <span class="tier-rate">47.3% Survived</span>
+                  <span class="tier-desc">Midship stairways with partial boat deck access</span>
+                </div>
+                <div class="tier-progress-track"><div class="tier-fill tier-fill-2" style="width: 47.3%;"></div></div>
+              </div>
+
+              <div class="deck-tier-item tier-3">
+                <div class="tier-badge">LOWER HULL & STEERAGE (3RD CLASS)</div>
+                <div class="tier-stat-row">
+                  <span class="tier-rate text-perished">24.2% Survived</span>
+                  <span class="tier-desc">Deep hull compartment barriers & locked gates</span>
+                </div>
+                <div class="tier-progress-track"><div class="tier-fill tier-fill-3" style="width: 24.2%;"></div></div>
+              </div>
+
+              <div class="deck-tier-item tier-crew">
+                <div class="tier-badge">BOILER ROOMS & CREW (ORLOP DECK)</div>
+                <div class="tier-stat-row">
+                  <span class="tier-rate text-perished">23.8% Survived</span>
+                  <span class="tier-desc">Maintained electrical dynamos until final plunge</span>
+                </div>
+                <div class="tier-progress-track"><div class="tier-fill tier-fill-crew" style="width: 23.8%;"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Custom Scenario Group Simulator & CSV Upload -->
+        <div class="custom-sim-grid">
+          
+          <!-- Interactive Group Builder -->
+          <div class="glass-card">
+            <div class="card-header">
+              <div class="card-title-group">
+                <i class="fa-solid fa-calculator header-icon"></i>
+                <div>
+                  <h2 class="card-title">Custom Group Death Count Simulator</h2>
+                  <p class="card-subtitle">Define custom cohorts or scenarios and simulate casualty counts</p>
+                </div>
+              </div>
+              <button id="addCohortBtn" class="btn-glass-sm"><i class="fa-solid fa-plus"></i> Add Cohort</button>
+            </div>
+
+            <div class="cohorts-container" id="cohortsContainer">
+              <!-- Cohorts rows rendered here -->
+            </div>
+
+            <div class="sim-actions">
+              <button id="runCustomSimBtn" class="btn-primary"><i class="fa-solid fa-play"></i> Simulate Group Death Count</button>
+            </div>
+
+            <!-- Custom Sim Results Output -->
+            <div class="sim-result-summary" id="simResultSummary" style="display: none;">
+              <div class="sim-stat-box">
+                <span class="sim-stat-title">Simulated Passengers</span>
+                <strong class="sim-stat-value" id="simTotalPeople">0</strong>
+              </div>
+              <div class="sim-stat-box casualty">
+                <span class="sim-stat-title">Estimated Deaths</span>
+                <strong class="sim-stat-value text-perished" id="simTotalDeaths">0</strong>
+              </div>
+              <div class="sim-stat-box survivor">
+                <span class="sim-stat-title">Estimated Survivors</span>
+                <strong class="sim-stat-value text-survived" id="simTotalSurvivors">0</strong>
+              </div>
+              <div class="sim-stat-box">
+                <span class="sim-stat-title">Mortality Rate</span>
+                <strong class="sim-stat-value" id="simMortalityRate">0%</strong>
+              </div>
+            </div>
+          </div>
+
+          <!-- CSV Upload & Manifest Predictor -->
+          <div class="glass-card">
+            <div class="card-header">
+              <div class="card-title-group">
+                <i class="fa-solid fa-file-csv header-icon"></i>
+                <div>
+                  <h2 class="card-title">Batch CSV Death Count Predictor</h2>
+                  <p class="card-subtitle">Upload custom passenger manifests (.csv) for automated death count calculation</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="csv-dropzone" id="csvDropzone">
+              <input type="file" id="csvFileInput" accept=".csv" class="file-input-hidden">
+              <div class="dropzone-content">
+                <i class="fa-solid fa-cloud-arrow-up dropzone-icon"></i>
+                <p class="dropzone-text">Drag & drop your Titanic manifest CSV here, or <strong>browse file</strong></p>
+                <span class="dropzone-sub">Accepts CSV with columns: pclass, sex, age, fare, sibsp, parch, embarked</span>
+              </div>
+            </div>
+
+            <div id="csvResultBox" class="csv-result-box" style="display: none;">
+              <div class="csv-stats-header">
+                <span id="csvFileName"><i class="fa-solid fa-file"></i> manifest.csv</span>
+                <div class="csv-pills">
+                  <span class="pill-perished">Deaths: <strong id="csvDeaths">0</strong></span>
+                  <span class="pill-survived">Survivors: <strong id="csvSurvivors">0</strong></span>
+                </div>
+              </div>
+              <div class="csv-table-wrapper">
+                <table class="glass-table" id="csvPreviewTable">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Class</th>
+                      <th>Sex</th>
+                      <th>Age</th>
+                      <th>Fare</th>
+                      <th>Prediction</th>
+                      <th>Death Prob.</th>
+                    </tr>
+                  </thead>
+                  <tbody id="csvTableBody"></tbody>
+                </table>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- ================= TAB 3: MODEL COMPARISON LAB ================= -->
+      <section class="tab-pane" id="tab-models" role="tabpanel">
+        <div class="glass-card">
+          <div class="card-header">
+            <div class="card-title-group">
+              <i class="fa-solid fa-chart-simple header-icon"></i>
+              <div>
+                <h2 class="card-title">Model Performance & Death Count Accuracy Lab</h2>
+                <p class="card-subtitle">Direct comparison of all machine learning classifiers trained on the Titanic dataset</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Model Cards Comparison Grid -->
+          <div class="models-benchmark-grid" id="modelsBenchmarkGrid">
+            <!-- Dynamically populated from /api/models -->
+          </div>
+
+          <!-- Confusion Matrix Explorer -->
+          <div class="confusion-matrix-explorer">
+            <h3 class="section-heading"><i class="fa-solid fa-table-cells-large"></i> Confusion Matrix Breakdown</h3>
+            <p class="section-sub">True Negatives (Correctly predicted Deaths) vs False Positives vs True Positives</p>
+            <div class="cm-display-grid" id="cmDisplayGrid">
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+
+      <!-- ================= TAB 4: HISTORICAL MANIFEST ================= -->
+      <section class="tab-pane" id="tab-manifest" role="tabpanel">
+        <div class="glass-card">
+          <div class="card-header">
+            <div class="card-title-group">
+              <i class="fa-solid fa-list-check header-icon"></i>
+              <div>
+                <h2 class="card-title">Historical Manifest Records</h2>
+                <p class="card-subtitle">Search and inspect historical passengers from the 1912 voyage</p>
+              </div>
+            </div>
+
+            <div class="search-box">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input type="text" id="manifestSearchInput" placeholder="Search passenger, town, sex..." class="glass-input-search">
+            </div>
+          </div>
+
+          <div class="manifest-table-wrapper">
+            <table class="glass-table" id="historicalManifestTable">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Class</th>
+                  <th>Sex</th>
+                  <th>Demographic</th>
+                  <th>Age</th>
+                  <th>Family (SibSp+Parch)</th>
+                  <th>Fare</th>
+                  <th>Embarked</th>
+                  <th>Actual Historical Fate</th>
+                  <th>Model Prediction</th>
+                </tr>
+              </thead>
+              <tbody id="historicalTableBody">
+                <!-- Loaded asynchronously -->
+              </tbody>
+            </table>
+          </div>
+
+          <div class="manifest-pagination">
+            <button id="prevManifestPage" class="btn-glass-sm"><i class="fa-solid fa-chevron-left"></i> Previous</button>
+            <span id="manifestPageIndicator">Showing 1 - 50 of 891</span>
+            <button id="nextManifestPage" class="btn-glass-sm">Next <i class="fa-solid fa-chevron-right"></i></button>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <div class="footer-content">
+        <p>RMS Titanic Death Count & Survival Predictor • Powered by Support Vector Machines & Deep ML Pipelines</p>
+        <div class="footer-links">
+          <span><i class="fa-solid fa-code"></i> Python 3.11 • scikit-learn • FastAPI</span>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

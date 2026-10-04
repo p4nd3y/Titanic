@@ -1,0 +1,219 @@
+{
+  "svc": {
+    "key": "svc",
+    "name": "Support Vector Machine (SVC RBF)",
+    "description": "Best performing kernel model from the notebook with optimal decision boundary in high-dimensional space.",
+    "scaled": true,
+    "recommended": true,
+    "accuracy": 81.46,
+    "precision": 75.0,
+    "recall": 78.26,
+    "f1_score": 76.6,
+    "roc_auc": 82.58,
+    "confusion_matrix": [
+      [
+        91,
+        18
+      ],
+      [
+        15,
+        54
+      ]
+    ],
+    "manifest_stats": {
+      "total_passengers": 889,
+      "actual_deaths": 549,
+      "predicted_deaths": 584,
+      "actual_survivors": 340,
+      "predicted_survivors": 305,
+      "death_error": 35,
+      "death_count_accuracy": 93.62
+    }
+  },
+  "gradient_boosting": {
+    "key": "gradient_boosting",
+    "name": "Gradient Boosting Classifier",
+    "description": "Advanced sequential ensemble boosting weak decision trees into a robust predictor.",
+    "scaled": false,
+    "recommended": false,
+    "accuracy": 82.02,
+    "precision": 76.81,
+    "recall": 76.81,
+    "f1_score": 76.81,
+    "roc_auc": 87.38,
+    "confusion_matrix": [
+      [
+        93,
+        16
+      ],
+      [
+        16,
+        53
+      ]
+    ],
+    "manifest_stats": {
+      "total_passengers": 889,
+      "actual_deaths": 549,
+      "predicted_deaths": 575,
+      "actual_survivors": 340,
+      "predicted_survivors": 314,
+      "death_error": 26,
+      "death_count_accuracy": 95.26
+    }
+  },
+  "random_forest": {
+    "key": "random_forest",
+    "name": "Random Forest Classifier",
+    "description": "Ensemble of 100 randomized decision trees providing strong variance reduction.",
+    "scaled": false,
+    "recommended": false,
+    "accuracy": 80.34,
+    "precision": 76.56,
+    "recall": 71.01,
+    "f1_score": 73.68,
+    "roc_auc": 85.37,
+    "confusion_matrix": [
+      [
+        94,
+        15
+      ],
+      [
+        20,
+        49
+      ]
+    ],
+    "manifest_stats": {
+      "total_passengers": 889,
+      "actual_deaths": 549,
+      "predicted_deaths": 606,
+      "actual_survivors": 340,
+      "predicted_survivors": 283,
+      "death_error": 57,
+      "death_count_accuracy": 89.62
+    }
+  },
+  "logistic_regression": {
+    "key": "logistic_regression",
+    "name": "Logistic Regression",
+    "description": "Classic linear classification modeling log-odds of survival with high interpretability.",
+    "scaled": true,
+    "recommended": false,
+    "accuracy": 80.34,
+    "precision": 73.61,
+    "recall": 76.81,
+    "f1_score": 75.18,
+    "roc_auc": 85.42,
+    "confusion_matrix": [
+      [
+        90,
+        19
+      ],
+      [
+        16,
+        53
+      ]
+    ],
+    "manifest_stats": {
+      "total_passengers": 889,
+      "actual_deaths": 549,
+      "predicted_deaths": 564,
+      "actual_survivors": 340,
+      "predicted_survivors": 325,
+      "death_error": 15,
+      "death_count_accuracy": 97.27
+    }
+  },
+  "decision_tree": {
+    "key": "decision_tree",
+    "name": "Decision Tree",
+    "description": "Hierarchical rule-based tree partitioner matching the notebook implementation.",
+    "scaled": true,
+    "recommended": false,
+    "accuracy": 79.21,
+    "precision": 72.22,
+    "recall": 75.36,
+    "f1_score": 73.76,
+    "roc_auc": 86.02,
+    "confusion_matrix": [
+      [
+        89,
+        20
+      ],
+      [
+        17,
+        52
+      ]
+    ],
+    "manifest_stats": {
+      "total_passengers": 889,
+      "actual_deaths": 549,
+      "predicted_deaths": 571,
+      "actual_survivors": 340,
+      "predicted_survivors": 318,
+      "death_error": 22,
+      "death_count_accuracy": 95.99
+    }
+  },
+  "knn": {
+    "key": "knn",
+    "name": "K-Nearest Neighbors (k=5)",
+    "description": "Instance-based classification based on Euclidean distance across feature space.",
+    "scaled": true,
+    "recommended": false,
+    "accuracy": 79.21,
+    "precision": 72.22,
+    "recall": 75.36,
+    "f1_score": 73.76,
+    "roc_auc": 84.18,
+    "confusion_matrix": [
+      [
+        89,
+        20
+      ],
+      [
+        17,
+        52
+      ]
+    ],
+    "manifest_stats": {
+      "total_passengers": 889,
+      "actual_deaths": 549,
+      "predicted_deaths": 568,
+      "actual_survivors": 340,
+      "predicted_survivors": 321,
+      "death_error": 19,
+      "death_count_accuracy": 96.54
+    }
+  },
+  "naive_bayes": {
+    "key": "naive_bayes",
+    "name": "Gaussian Naive Bayes",
+    "description": "Probabilistic classifier assuming feature conditional independence given survival class.",
+    "scaled": false,
+    "recommended": false,
+    "accuracy": 77.53,
+    "precision": 68.35,
+    "recall": 78.26,
+    "f1_score": 72.97,
+    "roc_auc": 81.68,
+    "confusion_matrix": [
+      [
+        84,
+        25
+      ],
+      [
+        15,
+        54
+      ]
+    ],
+    "manifest_stats": {
+      "total_passengers": 889,
+      "actual_deaths": 549,
+      "predicted_deaths": 539,
+      "actual_survivors": 340,
+      "predicted_survivors": 350,
+      "death_error": 10,
+      "death_count_accuracy": 98.18
+    }
+  }
+}
